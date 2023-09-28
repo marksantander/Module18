@@ -1,4 +1,7 @@
-const { User, Thought } = require('../models');
+const express = require('express');
+const Thought = require('../models/thought.js');
+
+const router = express.Router();
 
 module.exports = {
   
