@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -6,6 +7,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+
   email: {
     type: String,
     required: true,
@@ -20,6 +22,30 @@ userSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });
 
+const User = mongoose.model('User', userSchema);
+
+const reactionSchema = new mongoose.Schema({
+  reactionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: new mongoose.Types.ObjectId(),
+  },
+  reactionBody: {
+    type: String,
+    required: true,
+    maxlength: 280,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: function (timestamp) {
+      return timestamp.toLocaleDateString();
+    },
+  },
+});
 
 const thoughtSchema = new mongoose.Schema({
   thoughtText: {
@@ -46,28 +72,4 @@ thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 
-const reactionSchema = new mongoose.Schema({
-  reactionId: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: new mongoose.Types.ObjectId(),
-  },
-  reactionBody: {
-    type: String,
-    required: true,
-    maxlength: 280,
-  },
-  username: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: function (timestamp) {
-      return timestamp.toLocaleDateString();
-    },
-  },
-});
-
-const User = mongoose.model('User', userSchema);
 const Thought = mongoose.model('Thought', thoughtSchema);
